@@ -1,4 +1,5 @@
 {% load static %}
+{% load people_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,20 +11,9 @@
 </head>
 <body>
 <aside>
-    {% if is_selected == 0 %}
-        <p>Category</p>
-    {% else %}
-        <a href="{% url 'main' %}"><p>Category</p></a>
-    {% endif %}
-    <ul>
-        {% for el in category %}
-            {% if el.pk == is_selected %}
-                <ul>{{ el.name }}</ul>
-            {% else %}
-                <ul><a href="{{ el.get_absolute_url }}">{{ el.name }}</a></ul>
-            {% endif %}
-        {% endfor %}
-    </ul>
+
+    {% show_categories 'name' is_selected %}    <!-- во включающий тег show_categories передаем в параметр cat_selected параметр is_selected -->
+
 </aside>
 <header>
     <div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">

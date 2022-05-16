@@ -1,16 +1,14 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, Http404
 from .models import People, Category
 
 def pageNotFound(request, exception):
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
 def home(request):
-    category = Category.objects.all()
     posts = People.objects.all()
     context = {
         'posts': posts,
-        'category': category,
         'title': 'People page',
         'is_selected': 0,
     }
@@ -22,11 +20,9 @@ def about(request):
 
 def people_detail(request, people_id):
     post = People.objects.get(pk=people_id)
-    category = Category.objects.all()
     cat = post.cat.pk
     context = {
         'el': post,
-        'category': category,
         'title': 'People detail page',
         'is_selected': cat
     }
@@ -34,10 +30,12 @@ def people_detail(request, people_id):
 
 def category(request, cat_id):
     post = People.objects.filter(cat_id=cat_id)
-    category = Category.objects.all()
+
+    if len(post) == 0:
+        raise Http404()
+
     context = {
         'posts': post,
-        'category': category,
         'title': 'People detail page',
         'is_selected': cat_id
     }
