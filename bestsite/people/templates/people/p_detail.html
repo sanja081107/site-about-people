@@ -1,0 +1,13 @@
+{% extends 'people/base.html' %}
+
+{% block title %}
+People detail page
+{% endblock %}
+
+
+{% block main %}
+    <h1>People detail page</h1>
+    <p>{{ el.title }}</p>
+    <p>{{ el.content }}</p>
+    <img src="{{ el.photo.url }}" width="20%"><br>
+{% endblock %}

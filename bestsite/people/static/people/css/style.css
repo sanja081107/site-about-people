@@ -1,0 +1,48 @@
+.home {
+    height: 100%;
+    background-color: white;
+}
+.people {
+    border-bottom: 2px solid;
+    padding-bottom: 20px;
+}
+
+aside {
+    background-color: #DBE4D1;
+    padding-top: 5%;
+    padding-left: 2%;
+    height: 100%;
+    position: fixed;
+    width: 20%;
+    border-right: 2px solid black;
+}
+.article {
+    font-size: 20px;
+    background-color: #B59E93;
+}
+body ul {
+    list-style: none;
+    position: relative;
+    right: 13%;
+}
+body a {text-decoration: none;}
+
+header {
+    position: fixed;
+    height: 7.5%;
+    background-color: #7E90A8;
+    width: 100%;
+}
+
+main {
+    padding-top: 5%;
+    width: 80%;
+    margin-left: 20%;
+    font-size: 30px;
+    text-align: center;
+    float: top;
+}
+
+.fs-4 {
+    margin-left: 10px;
+}
