@@ -7,15 +7,6 @@ Main page
 
 {% block main %}
 
-    {% if is_selected == 0 %}
-        <h1>All people</h1><br>
-    {% endif %}
-    {% for el in category %}
-        {% if el.pk == is_selected %}
-            <h1>{{ el.name }}</h1><br>
-        {% endif %}
-    {% endfor %}
-
     {% for el in posts %}
         <div class="people">
             <div class="article">
@@ -31,4 +22,5 @@ Main page
             <a class="btn btn-warning" href="{{ el.get_absolute_url }}">More info</a>
         </div>
     {% endfor %}
+
 {% endblock %}

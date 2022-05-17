@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from .models import People, Category
 
@@ -18,8 +18,8 @@ def about(request):
     context = {'title': 'About page'}
     return render(request, 'people/about.html', context)
 
-def people_detail(request, people_id):
-    post = People.objects.get(pk=people_id)
+def people_detail(request, people_slug):
+    post = get_object_or_404(People, slug=people_slug)
     cat = post.cat.pk
     context = {
         'el': post,
@@ -28,8 +28,9 @@ def people_detail(request, people_id):
     }
     return render(request, 'people/p_detail.html', context)
 
-def category(request, cat_id):
-    post = People.objects.filter(cat_id=cat_id)
+def category(request, cat_slug):
+    cat = Category.objects.get(slug=cat_slug)
+    post = People.objects.filter(cat=cat)
 
     if len(post) == 0:
         raise Http404()
@@ -37,6 +38,6 @@ def category(request, cat_id):
     context = {
         'posts': post,
         'title': 'People detail page',
-        'is_selected': cat_id
+        'is_selected': cat.pk
     }
     return render(request, 'people/index.html', context)

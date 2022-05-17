@@ -6,8 +6,12 @@ People detail page
 
 
 {% block main %}
-    <h1>People detail page</h1>
-    <p>{{ el.title }}</p>
-    <p>{{ el.content }}</p>
-    <img src="{{ el.photo.url }}" width="20%"><br>
+<h1>People detail page</h1>
+<p>{{ el.title }}</p>
+<div class="content">
+    {% if el.photo %}
+        <img id="photo" src="{{ el.photo.url }}" width="20%" align="left">
+    {% endif %}
+    {{ el.content|linebreaks }}
+</div>
 {% endblock %}
