@@ -20,6 +20,19 @@ aside {
     font-size: 20px;
     background-color: #B59E93;
 }
+.add-post {
+    width: 50%;
+    margin-left: 25%;
+}
+.form-error {
+    margin-left: 20%;
+    color: red;
+}
+.form-check {
+    position: relative;
+    left: 65%;
+    top: -25px;
+}
 body ul {
     list-style: none;
     position: relative;

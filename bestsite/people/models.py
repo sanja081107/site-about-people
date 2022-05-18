@@ -5,19 +5,19 @@ from django.urls import reverse
 class People(models.Model):
     title = models.CharField(max_length=50, verbose_name='Имя')
     slug = models.SlugField(max_length=50, unique=True, db_index=True, verbose_name='URL')
-    content = models.TextField(blank=True)
+    content = models.TextField(blank=True, verbose_name='Контент')
     photo = models.ImageField(upload_to='photos/%Y/%m/%d/', verbose_name='Фото')
     time_create = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
     time_update = models.DateTimeField(auto_now=True)
-    is_published = models.BooleanField(default=True, verbose_name='Опубликовано')
+    is_published = models.BooleanField(default=True, verbose_name='Опубликовать')
     cat = models.ForeignKey('Category', on_delete=models.PROTECT, verbose_name='Категория')
 
     def __str__(self):
         return self.title
 
     class Meta:
-        verbose_name = 'people'
-        verbose_name_plural = 'peoples'
+        verbose_name = 'People'
+        verbose_name_plural = 'Peoples'
         ordering = ['-time_create', 'title']
 
     def get_absolute_url(self):
