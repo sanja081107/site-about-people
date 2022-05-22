@@ -4,11 +4,13 @@
     <a href="{% url 'main' %}"><p>Category</p></a>
 {% endif %}
 <ul>
-    {% for el in cats %}
-    {% if el.pk == is_selected %}
-        <ul>{{ el.name }}</ul>
-    {% else %}
-        <ul><a href="{{ el.get_absolute_url }}">{{ el.name }}</a></ul>
+{% for el in cats %}
+    {% if el.people__count > 0 %}
+        {% if el.pk == is_selected %}
+            <ul>{{ el.name }}</ul>
+        {% else %}
+            <ul><a href="{{ el.get_absolute_url }}">{{ el.name }}</a></ul>
+        {% endif %}
     {% endif %}
 {% endfor %}
 </ul>

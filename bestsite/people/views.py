@@ -2,9 +2,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import *
 from .models import *
+from .utils import *
 
 
 def pageNotFound(request, exception):
@@ -16,15 +18,16 @@ def about(request):
     return render(request, 'people/about.html', context)
 
 # ----------------------------------------------------------------
-class HomeListView(ListView):
+class HomeListView(DataMixin, ListView):
     model = People
     template_name = 'people/index.html'
     context_object_name = 'posts'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'People page'
-        context['is_selected'] = 0
+
+        c_def = self.get_user_context(title='People page')
+        context = dict(list(context.items()) + list(c_def.items()))
         return context
 
     def get_queryset(self):
@@ -41,7 +44,7 @@ class HomeListView(ListView):
 
 
 # ----------------------------------------------------------------
-class PeopleDetailView(DetailView):
+class PeopleDetailView(DataMixin, DetailView):
     model = People
     template_name = 'people/p_detail.html'
     context_object_name = 'el'
@@ -50,8 +53,9 @@ class PeopleDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         post = People.objects.get(slug=self.kwargs['people_slug'])
-        context['title'] = 'People detail page'
-        context['is_selected'] = post.cat.pk
+
+        c_def = self.get_user_context(title=context['el'], is_selected=post.cat.pk)
+        context = dict(list(context.items()) + list(c_def.items()))
         return context
 
 # def people_detail(request, people_slug):
@@ -65,7 +69,7 @@ class PeopleDetailView(DetailView):
 #     return render(request, 'people/p_detail.html', context)
 
 # ----------------------------------------------------------------
-class CategoryListView(ListView):
+class CategoryListView(DataMixin, ListView):
     model = People
     template_name = 'people/index.html'
     context_object_name = 'posts'
@@ -81,8 +85,9 @@ class CategoryListView(ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         cat = Category.objects.get(slug=self.kwargs['cat_slug'])
-        context['is_selected'] = cat.pk
-        context['title'] = cat.name
+
+        c_def = self.get_user_context(is_selected=cat.pk, title=cat.name)
+        context = dict(list(context.items()) + list(c_def.items()))
         return context
 
 # def category(request, cat_slug):
@@ -100,15 +105,15 @@ class CategoryListView(ListView):
 #     return render(request, 'people/index.html', context)
 # ----------------------------------------------------------------
 
-class PeopleCreateView(CreateView):
+class PeopleCreateView(LoginRequiredMixin, DataMixin, CreateView):
     form_class = PeopleForm
     template_name = 'people/add_article.html'
     success_url = reverse_lazy('main')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Add article'
-        return context
+        c_def = self.get_user_context(title='Add article')
+        return dict(list(context.items()) + list(c_def.items()))
 
 # def add_article(request):
 #     if request.method == 'POST':

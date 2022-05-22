@@ -23,10 +23,9 @@
       </a>
 
       <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
-        <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'main' %}">Main</a>
-        <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'add_article' %}">Add page</a>
-        <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'about' %}">About</a>
-        <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'sign_in' %}">Sign in</a>
+          {% for el in menu %}
+                <a class="me-3 py-2 text-dark text-decoration-none" href="{% url el.url_name %}">{{ el.title }}</a>
+          {% endfor %}
       </nav>
     </div>
 </header>
