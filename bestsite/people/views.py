@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.urls import reverse_lazy
@@ -12,9 +13,10 @@ from .utils import *
 def pageNotFound(request, exception):
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
-
 def about(request):
-    context = {'title': 'About page'}
+    list_people = People.objects.all()
+    paginator = Paginator(list_people, 3)
+    context = {'title': 'About page', 'menu': menu}
     return render(request, 'people/about.html', context)
 
 # ----------------------------------------------------------------
@@ -26,7 +28,7 @@ class HomeListView(DataMixin, ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        c_def = self.get_user_context(title='People page')
+        c_def = self.get_user_context(title='Все люди')
         context = dict(list(context.items()) + list(c_def.items()))
         return context
 
@@ -109,6 +111,7 @@ class PeopleCreateView(LoginRequiredMixin, DataMixin, CreateView):
     form_class = PeopleForm
     template_name = 'people/add_article.html'
     success_url = reverse_lazy('main')
+    login_url = '/admin/'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -133,3 +136,15 @@ class PeopleCreateView(LoginRequiredMixin, DataMixin, CreateView):
 #     }
 #     return render(request, 'people/add_article.html', context)
 # ----------------------------------------------------------------
+
+class RegisterUser(DataMixin, CreateView):
+    # form_class = UserCreationForm     можно напрямую отдать форму от джанго или создать свою в forms.py
+    form_class = RegisterUserForm
+    template_name = 'people/registration.html'
+    success_url = reverse_lazy('main')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        c_def = self.get_user_context(title='Регистрация')
+        return dict(list(context.items()) + list(c_def.items()))

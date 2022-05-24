@@ -28,15 +28,22 @@ aside {
     margin-left: 20%;
     color: red;
 }
+.list_page {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
 .form-check {
     position: relative;
     left: 65%;
     top: -25px;
 }
-body ul {
+body aside ul {
     list-style: none;
     position: relative;
     right: 13%;
+}
+ul {
+    list-style: none;
 }
 body a {text-decoration: none;}
 

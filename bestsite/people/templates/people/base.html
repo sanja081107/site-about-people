@@ -26,6 +26,8 @@
           {% for el in menu %}
                 <a class="me-3 py-2 text-dark text-decoration-none" href="{% url el.url_name %}">{{ el.title }}</a>
           {% endfor %}
+          <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'sign_in' %}">Sign in</a>
+          <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'register' %}">Register</a>
       </nav>
     </div>
 </header>
@@ -33,6 +35,29 @@
     <main>
         {% block main %}
         {% endblock %}
+
+        <div class="list_page">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a class="btn btn-warning" href="?page={{ page_obj.previous_page_number }}">&lt;</a>
+            {% endif %}
+
+            {% if page_obj.has_other_pages %}
+                {% for p in paginator.page_range %}
+                    {% if page_obj.number == p %}
+                        <span class="btn btn-success">{{ p }}</span>
+                    {% elif p >= page_obj.number|add:-2 and p <= page_obj.number|add:2 %}
+                        <a class="btn btn-danger" href="?page={{ p }}">{{ p }}</a>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            {% if page_obj.has_next %}
+                <a class="btn btn-warning" href="?page={{ page_obj.next_page_number }}">&gt;</a>
+                <a href="?page={{ paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </div>
+
     </main>
 </div>
 </body>

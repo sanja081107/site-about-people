@@ -1,15 +1,15 @@
 {% if is_selected == 0 %}
-    <p>Category</p>
+    <p>Все люди</p>
 {% else %}
-    <a href="{% url 'main' %}"><p>Category</p></a>
+    <a href="{% url 'main' %}"><p>Все люди</p></a>
 {% endif %}
 <ul>
 {% for el in cats %}
     {% if el.people__count > 0 %}
         {% if el.pk == is_selected %}
-            <ul>{{ el.name }}</ul>
+            <li>{{ el.name }}</li>
         {% else %}
-            <ul><a href="{{ el.get_absolute_url }}">{{ el.name }}</a></ul>
+            <li><a href="{{ el.get_absolute_url }}">{{ el.name }}</a></li>
         {% endif %}
     {% endif %}
 {% endfor %}

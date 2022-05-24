@@ -1,3 +1,6 @@
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import *
 from django.core.exceptions import ValidationError
 
 from .models import *
@@ -50,3 +53,14 @@ class PeopleForm(ModelForm):
         return title
 
 # ----------------------------------------------------------------
+
+class RegisterUserForm(UserCreationForm):
+    username = forms.CharField(label='login', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Input login'}))
+    password1 = forms.CharField(label='password 1', widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Input password'}))
+    password2 = forms.CharField(label='password 2', widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Input password again'}))
+    email = forms.CharField(label='email', widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Input email'}))
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password1', 'password2')
+
