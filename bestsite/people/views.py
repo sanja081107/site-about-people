@@ -1,3 +1,6 @@
+from django.contrib.auth import logout, login
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.views import LoginView
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseNotFound, Http404
@@ -14,12 +17,18 @@ def pageNotFound(request, exception):
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
 def about(request):
-    list_people = People.objects.all()
-    paginator = Paginator(list_people, 3)
-    context = {'title': 'About page', 'menu': menu}
+    menu_about = menu.copy()
+    if not request.user.is_authenticated:
+        menu_about.pop(1)
+    context = {'title': 'About page', 'menu': menu_about}
     return render(request, 'people/about.html', context)
 
+def logout_user(request):
+    logout(request)     # стандартная ф-ия джанго для выхода пользователя
+    return redirect('main')
+
 # ----------------------------------------------------------------
+
 class HomeListView(DataMixin, ListView):
     model = People
     template_name = 'people/index.html'
@@ -46,6 +55,7 @@ class HomeListView(DataMixin, ListView):
 
 
 # ----------------------------------------------------------------
+
 class PeopleDetailView(DataMixin, DetailView):
     model = People
     template_name = 'people/p_detail.html'
@@ -71,6 +81,7 @@ class PeopleDetailView(DataMixin, DetailView):
 #     return render(request, 'people/p_detail.html', context)
 
 # ----------------------------------------------------------------
+
 class CategoryListView(DataMixin, ListView):
     model = People
     template_name = 'people/index.html'
@@ -111,7 +122,7 @@ class PeopleCreateView(LoginRequiredMixin, DataMixin, CreateView):
     form_class = PeopleForm
     template_name = 'people/add_article.html'
     success_url = reverse_lazy('main')
-    login_url = '/admin/'
+    login_url = '/admin/'   # это относится к LoginRequiredMixin, если нет авторизании то идет перенаправление
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -148,3 +159,26 @@ class RegisterUser(DataMixin, CreateView):
 
         c_def = self.get_user_context(title='Регистрация')
         return dict(list(context.items()) + list(c_def.items()))
+
+    def form_valid(self, form):     # эта ф-ия вызывается после успешной обработки формы и залогинивает пол-ля
+        user = form.save()
+        login(self.request, user)
+        return redirect('main')
+
+# ----------------------------------------------------------------
+
+class LoginUser(DataMixin, LoginView):
+    # form_class = AuthenticationForm
+    form_class = LoginUserForm
+    template_name = 'people/login.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title='Авторизация')
+        return dict(list(context.items()) + list(c_def.items()))
+
+    def get_success_url(self):
+        return reverse_lazy('main')
+
+# ----------------------------------------------------------------
+

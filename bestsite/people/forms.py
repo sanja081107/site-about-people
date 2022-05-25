@@ -1,6 +1,6 @@
-from django.contrib.auth.forms import UserCreationForm
+from django import forms
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import *
 from django.core.exceptions import ValidationError
 
 from .models import *
@@ -39,8 +39,7 @@ class PeopleForm(ModelForm):
                 'class': 'form-control',
             }),
             'is_published': CheckboxInput(attrs={
-                'class': 'form-check',
-                'placeholder': 'Input content'
+                'class': 'form-check'
             })
         }
 
@@ -55,12 +54,21 @@ class PeopleForm(ModelForm):
 # ----------------------------------------------------------------
 
 class RegisterUserForm(UserCreationForm):
-    username = forms.CharField(label='login', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Input login'}))
-    password1 = forms.CharField(label='password 1', widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Input password'}))
-    password2 = forms.CharField(label='password 2', widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Input password again'}))
-    email = forms.CharField(label='email', widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Input email'}))
+    username = forms.CharField(label='Login', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Input login'}))
+    password1 = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Input password'}))
+    password2 = forms.CharField(label='Password again', widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Input password again'}))
+    email = forms.CharField(label='Email (not required)', required=False, widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Input email'}))
 
     class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2')
+
+# ----------------------------------------------------------------
+
+class LoginUserForm(AuthenticationForm):
+    username = forms.CharField(label='Login', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Input login'}))
+    password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Input password'}))
+
+# ----------------------------------------------------------------
+
 

@@ -11,8 +11,9 @@ class PeopleAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}  # делаем автозаполнение для поля slug полем title в админ панели
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name')
+    list_display = ('id', 'name', 'logo')
     list_display_links = ('id', 'name')
+    list_editable = ('logo',)
     search_fields = ('name',)
     prepopulated_fields = {'slug': ('name',)}   # делаем автозаполнение для поля slug полем name в админ панели
 

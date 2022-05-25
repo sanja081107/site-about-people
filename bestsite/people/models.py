@@ -26,6 +26,7 @@ class People(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=50, db_index=True, verbose_name='Название')
     slug = models.SlugField(max_length=50, unique=True, db_index=True, verbose_name='URL')
+    logo = models.CharField(max_length=255, verbose_name='logo', null=True)
 
     def get_absolute_url(self):
         return reverse('category', kwargs={'cat_slug': self.slug})
