@@ -12,6 +12,20 @@
     {% if el.photo %}
         <img id="photo" src="{{ el.photo.url }}" width="30%" align="left">
     {% endif %}
-    {{ el.content|linebreaks }}
+    {{ el.content }}
 </div>
+
+<form method="post">
+    {% csrf_token %}
+    <div class="add-post">
+        <p>{{ form.context }}</p>
+    </div>
+    <button type="submit">Create comment</button>
+</form><br>
+{% for el in comments %}
+    <div class="add-post">
+        <p>Comment from {{ el.author }}: {{ el.context }}</p>
+    </div>
+{% endfor %}
+
 {% endblock %}

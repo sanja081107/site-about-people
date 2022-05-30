@@ -7,14 +7,28 @@
 
 {% block main %}
 <h1>{{title}}</h1><br>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="add-post">
         {% for el in form %}
-        <p><label for="{{el.id_for_label}}">{{ el.label }}:</label>{{ el }}</p>
-        <div class="form-error">{{ el.errors }}</div>   <!-- Выдается ошибка по отдельному полю формы -->
+        <p><label for="{{el.id_for_label}}">{{ el.label }}:</label> {{ el }}</p>
+        <div class="form-error"> {{ el.errors }}</div>   <!-- Выдается ошибка по отдельному полю формы -->
         {% endfor %}
     </div>
     <button type="submit">Create user</button>
     </form>
+
+<script id="django-admin-form-add-constants"
+    src="/static/admin/js/change_form.js"
+
+        data-model-name="customuser"
+
+    async>
+</script>
+
+<script id="django-admin-prepopulated-fields-constants"
+        src="/static/admin/js/prepopulate_init.js"
+        data-prepopulated-fields="[{&quot;id&quot;: &quot;#id_slug&quot;, &quot;username&quot;: &quot;slug&quot;, &quot;dependency_ids&quot;: [&quot;#id_username&quot;], &quot;dependency_list&quot;: [&quot;username&quot;], &quot;maxLength&quot;: 50, &quot;allowUnicode&quot;: false}]">
+</script>
+
 {% endblock %}

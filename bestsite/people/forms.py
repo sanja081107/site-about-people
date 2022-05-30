@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
@@ -54,14 +54,26 @@ class PeopleForm(ModelForm):
 # ----------------------------------------------------------------
 
 class RegisterUserForm(UserCreationForm):
-    username = forms.CharField(label='Login', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Input login'}))
+    username = forms.CharField(label='Username', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Input login'}))
+    slug = forms.SlugField(label='Url', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Input URL'}))
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Input password'}))
     password2 = forms.CharField(label='Password again', widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Input password again'}))
     email = forms.CharField(label='Email (not required)', required=False, widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Input email'}))
+    photo = forms.ImageField(label='Your photo (not required)', required=False, widget=forms.FileInput(attrs={'type': 'file', 'accept': 'image/*'}))
+    birthday = forms.DateTimeField(label='Birthday (not required)', required=False, widget=forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}))
+    context = forms.CharField(label='About(not required)', required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'info', 'rows': '10'}))
 
     class Meta:
-        model = User
-        fields = ('username', 'email', 'password1', 'password2')
+        model = CustomUser
+        fields = ('username', 'slug', 'photo', 'email', 'birthday', 'context', 'password1', 'password2')
+
+# ----------------------------------------------------------------
+
+class ChangeUserForm(UserChangeForm):
+
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'slug', 'photo', 'email', 'birthday', 'context')
 
 # ----------------------------------------------------------------
 
@@ -69,6 +81,18 @@ class LoginUserForm(AuthenticationForm):
     username = forms.CharField(label='Login', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Input login'}))
     password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Input password'}))
 
+    class Meta:
+        model = CustomUser
+
 # ----------------------------------------------------------------
 
+class CommentForm(ModelForm):
 
+    class Meta:
+        model = Comment
+        fields = ['context']
+        widgets = {
+            'context': Textarea(attrs={'class': 'form-control', 'placeholder': 'Input text'})
+        }
+
+# ----------------------------------------------------------------

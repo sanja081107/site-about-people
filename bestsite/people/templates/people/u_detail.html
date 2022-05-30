@@ -1,0 +1,24 @@
+{% extends 'people/base.html' %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block main %}
+<h1>{{ el.username }}</h1><br>
+<div class="content">
+    {% if el.photo %}
+        <img id="photo" src="{{ el.photo.url }}" width="20%" align="left">
+    {% endif %}
+    {% if el.first_name %}
+        <p>Имя: {{ el.first_name }}</p>
+    {% endif %}
+    {% if el.last_name %}
+        <p>Фамилия: {{ el.last_name }}</p>
+    {% endif %}
+    {% if el.email %}
+        <p>Почта: {{ el.email }}</p>
+    {% endif %}
+</div>
+{% endblock %}

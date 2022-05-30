@@ -56,8 +56,27 @@ class HomeListView(DataMixin, ListView):
 
 # ----------------------------------------------------------------
 
-class PeopleDetailView(DataMixin, DetailView):
+class UserDetailView(DataMixin, DetailView):
+    model = CustomUser
+    template_name = 'people/u_detail.html'
+    context_object_name = 'el'
+    slug_url_kwarg = 'user_slug'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = CustomUser.objects.get(slug=self.kwargs['user_slug'])
+        c_def = self.get_user_context(title=user.username)
+        context = dict(list(context.items()) + list(c_def.items()))
+        return context
+
+
+class ResponseCreate:
+    pass
+
+
+class PeopleDetailView(DataMixin, DetailView, CreateView):
     model = People
+    form_class = CommentForm
     template_name = 'people/p_detail.html'
     context_object_name = 'el'
     slug_url_kwarg = 'people_slug'
@@ -65,10 +84,21 @@ class PeopleDetailView(DataMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         post = People.objects.get(slug=self.kwargs['people_slug'])
+        comments = Comment.objects.filter(people=post)
 
-        c_def = self.get_user_context(title=context['el'], is_selected=post.cat.pk)
+        c_def = self.get_user_context(title=context['el'], is_selected=post.cat.pk, comments=comments)
         context = dict(list(context.items()) + list(c_def.items()))
         return context
+
+    def get_success_url(self):
+        post = People.objects.get(slug=self.kwargs['people_slug'])
+        return post.get_absolute_url()
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        project = People.objects.get(slug=self.kwargs['people_slug'])
+        form.instance.people = project
+        return super().form_valid(form)
 
 # def people_detail(request, people_slug):
 #     post = get_object_or_404(People, slug=people_s    lug)

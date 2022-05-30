@@ -1,6 +1,29 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
+from django.utils.safestring import mark_safe
 
+# ------------------------------------------------------------------------------------------
+from bestsite import settings
+
+
+class CustomUser(AbstractUser):
+    photo = models.ImageField(upload_to='photos/%Y/%m/%d/', verbose_name='Фото', null=True)
+    slug = models.SlugField(max_length=50, unique=True, db_index=True, verbose_name='URL', null=True)
+    context = models.TextField(verbose_name='Краткая информация', null=True)
+    birthday = models.DateTimeField(verbose_name='Время создания', null=True)
+
+    class Meta:
+        verbose_name = 'User'
+        verbose_name_plural = 'Users'
+
+    def get_absolute_url(self):
+        return reverse('user_detail', kwargs={'user_slug': self.slug})
+
+    def __str__(self):
+        return self.username
+
+# ------------------------------------------------------------------------------------------
 
 class People(models.Model):
     title = models.CharField(max_length=50, verbose_name='Имя')
@@ -23,6 +46,8 @@ class People(models.Model):
     def get_absolute_url(self):
         return reverse('people_detail', kwargs={'people_slug': self.slug})
 
+# ------------------------------------------------------------------------------------------
+
 class Category(models.Model):
     name = models.CharField(max_length=50, db_index=True, verbose_name='Название')
     slug = models.SlugField(max_length=50, unique=True, db_index=True, verbose_name='URL')
@@ -31,6 +56,9 @@ class Category(models.Model):
     def get_absolute_url(self):
         return reverse('category', kwargs={'cat_slug': self.slug})
 
+    def get_html_logo(self):
+        return mark_safe(f'{self.logo}')
+
     def __str__(self):
         return self.name
 
@@ -38,3 +66,20 @@ class Category(models.Model):
         verbose_name = 'category'
         verbose_name_plural = 'categories'
         ordering = ['name']
+
+# ------------------------------------------------------------------------------------------
+
+class Comment(models.Model):
+    author = models.ForeignKey('CustomUser', on_delete=models.CASCADE, verbose_name='Имя автора')
+    people = models.ForeignKey('People', on_delete=models.CASCADE, verbose_name='Имя поста')
+    context = models.TextField(verbose_name='Содержание')
+
+    def __str__(self):
+        return f'{self.author}'
+
+    class Meta:
+        verbose_name = 'Comment'
+        verbose_name_plural = 'Comments'
+        ordering = ['pk']
+
+# ------------------------------------------------------------------------------------------

@@ -7,9 +7,9 @@
 {% for el in cats %}
     {% if el.people__count > 0 %}
         {% if el.pk == is_selected %}
-            <li><i class="{{ el.logo }}"></i> {{ el.name }}</li>
+            <li>{{ el.get_html_logo }} {{ el.name }}</li>
         {% else %}
-            <li><i class="{{ el.logo }}"></i><a href="{{ el.get_absolute_url }}"> {{ el.name }}</a></li>
+            <li>{{ el.get_html_logo }}<a href="{{ el.get_absolute_url }}"> {{ el.name }}</a></li>
         {% endif %}
     {% endif %}
 {% endfor %}
