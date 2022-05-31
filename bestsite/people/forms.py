@@ -92,7 +92,7 @@ class CommentForm(ModelForm):
         model = Comment
         fields = ['context']
         widgets = {
-            'context': Textarea(attrs={'class': 'form-control', 'placeholder': 'Input text'})
+            'context': Textarea(attrs={'class': 'form-control', 'placeholder': 'Input text', 'rows': '5'})
         }
 
 # ----------------------------------------------------------------

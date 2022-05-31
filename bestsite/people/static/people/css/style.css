@@ -24,6 +24,15 @@ aside {
     width: 50%;
     margin-left: 25%;
 }
+.comment-people{
+    align: center;
+    padding: 5px;
+    width: 50%;
+    margin-top: 10px;
+    margin-left: 25%;
+    border-radius: 10px;
+    border: 2px solid blue;
+}
 .form-error {
     margin-left: 20%;
     color: red;

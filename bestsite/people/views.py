@@ -5,7 +5,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import *
@@ -20,7 +20,7 @@ def about(request):
     menu_about = menu.copy()
     if not request.user.is_authenticated:
         menu_about.pop(1)
-    context = {'title': 'About page', 'menu': menu_about}
+    context = {'title': 'Страница о нас', 'menu': menu_about}
     return render(request, 'people/about.html', context)
 
 def logout_user(request):
@@ -69,10 +69,7 @@ class UserDetailView(DataMixin, DetailView):
         context = dict(list(context.items()) + list(c_def.items()))
         return context
 
-
-class ResponseCreate:
-    pass
-
+# ----------------------------------------------------------------
 
 class PeopleDetailView(DataMixin, DetailView, CreateView):
     model = People
@@ -90,11 +87,11 @@ class PeopleDetailView(DataMixin, DetailView, CreateView):
         context = dict(list(context.items()) + list(c_def.items()))
         return context
 
-    def get_success_url(self):
+    def get_success_url(self):      # если форма создана идет переадресация
         post = People.objects.get(slug=self.kwargs['people_slug'])
         return post.get_absolute_url()
 
-    def form_valid(self, form):
+    def form_valid(self, form):     # если форма коомента валидна то создается коммент где автор текущий пол-ль, а пипл выбранный пост
         form.instance.author = self.request.user
         project = People.objects.get(slug=self.kwargs['people_slug'])
         form.instance.people = project
@@ -109,6 +106,25 @@ class PeopleDetailView(DataMixin, DetailView, CreateView):
 #         'is_selected': cat
 #     }
 #     return render(request, 'people/p_detail.html', context)
+
+# ----------------------------------------------------------------
+
+class CommentDeleteView(DataMixin, DeleteView):
+    model = Comment
+    template_name = 'people/delete_blog.html'
+    context_object_name = 'el'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        c_def = self.get_user_context(title='Delete comment')
+        context = dict(list(context.items()) + list(c_def.items()))
+        return context
+
+    def get_success_url(self):
+        post = Comment.objects.get(pk=self.kwargs['pk'])
+        return post.people.get_absolute_url()
+
 
 # ----------------------------------------------------------------
 

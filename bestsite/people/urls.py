@@ -11,6 +11,7 @@ urlpatterns = [
     path('add_article/', PeopleCreateView.as_view(), name='add_article'),
     path('user/<slug:user_slug>/', UserDetailView.as_view(), name='user_detail'),
     path('people/<slug:people_slug>/', PeopleDetailView.as_view(), name='people_detail'),
+    path('delete_comment/<int:pk>', CommentDeleteView.as_view(), name='delete_comment'),
     path('category/<slug:cat_slug>/', CategoryListView.as_view(), name='category')
 
 ]
