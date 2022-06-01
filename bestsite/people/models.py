@@ -11,7 +11,7 @@ class CustomUser(AbstractUser):
     photo = models.ImageField(upload_to='photos/%Y/%m/%d/', verbose_name='Фото', null=True)
     slug = models.SlugField(max_length=50, unique=True, db_index=True, verbose_name='URL', null=True)
     context = models.TextField(verbose_name='Краткая информация', null=True)
-    birthday = models.DateTimeField(verbose_name='Время создания', null=True)
+    birthday = models.DateTimeField(verbose_name='День рождения', null=True)
 
     class Meta:
         verbose_name = 'User'

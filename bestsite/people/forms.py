@@ -11,6 +11,7 @@ class PeopleForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['cat'].empty_label = 'Категория не выбрана'
+        self.fields['content'].label = 'Контент'
 
     class Meta:
         model = People
@@ -61,11 +62,24 @@ class RegisterUserForm(UserCreationForm):
     email = forms.CharField(label='Email (not required)', required=False, widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Input email'}))
     photo = forms.ImageField(label='Your photo (not required)', required=False, widget=forms.FileInput(attrs={'type': 'file', 'accept': 'image/*'}))
     birthday = forms.DateTimeField(label='Birthday (not required)', required=False, widget=forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}))
-    context = forms.CharField(label='About(not required)', required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'info', 'rows': '10'}))
+    context = forms.CharField(label='About(not required)', required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'info', 'rows': '7'}))
 
     class Meta:
         model = CustomUser
         fields = ('username', 'slug', 'photo', 'email', 'birthday', 'context', 'password1', 'password2')
+        # widgets = {'slug': forms.HiddenInput()}
+
+class UpdateUserForm(ModelForm):
+    username = forms.CharField(label='Username', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Input login'}))
+    slug = forms.SlugField(label='Url', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Input URL'}))
+    email = forms.CharField(label='Email (not required)', required=False, widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Input email'}))
+    photo = forms.ImageField(label='Your photo (not required)', required=False, widget=forms.FileInput(attrs={'type': 'file', 'accept': 'image/*'}))
+    birthday = forms.DateTimeField(label='Birthday (not required)', required=False, widget=forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}))
+    context = forms.CharField(label='About(not required)', required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'info', 'rows': '7'}))
+
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'slug', 'photo', 'email', 'birthday', 'context')
 
 # ----------------------------------------------------------------
 

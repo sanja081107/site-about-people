@@ -6,15 +6,24 @@
 
 
 {% block main %}
-<h1>People detail page</h1>
-<p>{{ el.title }}</p>
+<h1>People detail page</h1><br>
+<h3>Имя: {{ el.title }}</h3>
 <div class="content">
+
     {% if el.photo %}
         <img id="photo" src="{{ el.photo.url }}" width="25%" align="left">
     {% endif %}
-    {{ el.content }}
+
+
+    {% if el.content %}
+        <p><h4>Контент:</h4> {{ el.content|linebreaks }}</p>
+    {% else %}
+        <p>Нет информации о контенте</p>
+    {% endif %}
+
 </div>
 
+{% if request.user.is_authenticated %}
 <form method="post">
     {% csrf_token %}
     <div class="add-post">
@@ -22,13 +31,15 @@
     </div>
     <button type="submit">Leave comment</button>
 </form><br>
+
 {% for el in comments %}
     <div class="comment-people">
-        <p>Comment from {{ el.author }}: {{ el.context }}</p>
+        <p>Comment from <a href="{{ el.author.get_absolute_url }}">{{ el.author }}</a>: {{ el.context }}</p>
         {% if request.user == el.author %}
             <a href="{% url 'delete_comment' el.pk %}" class="btn btn-danger">Delete</a>
         {% endif %}
     </div>
 {% endfor %}
+{% endif %}
 
 {% endblock %}

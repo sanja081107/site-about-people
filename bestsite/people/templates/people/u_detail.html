@@ -8,17 +8,51 @@
 {% block main %}
 <h1>{{ el.username }}</h1><br>
 <div class="content">
+
     {% if el.photo %}
-        <img id="photo" src="{{ el.photo.url }}" width="20%" align="left">
+        <img id="photo" src="{{ el.photo.url }}" width="22%" align="left">
     {% endif %}
+
+
+    {% if request.user == el %}
+        <a class="btn btn-danger" href="{% url 'user_edit' el.slug %}">Edit profile</a>
+    {% endif %}
+
+
     {% if el.first_name %}
-        <p>Имя: {{ el.first_name }}</p>
+        <p><h4>Имя:</h4> {{ el.first_name }}</p>
+    {% else %}
+        <p><h4>Имя:</h4> Не заполнено</p>
     {% endif %}
-    {% if el.last_name %}
-        <p>Фамилия: {{ el.last_name }}</p>
+
+
+    {% if el.first_name %}
+        <p><h4>Фамилия:</h4> {{ el.last_name }}</p>
+    {% else %}
+        <p><h4>Фамилия:</h4> Не заполнено</p>
     {% endif %}
+
+
+    {% if el.birthday %}
+        <p><h4>День рождения:</h4> {{ el.birthday }}</p>
+    {% else %}
+        <p><h4>День рождения:</h4> Не заполнено</p>
+    {% endif %}
+
+
+
     {% if el.email %}
-        <p>Почта: {{ el.email }}</p>
+        <p><h4>Почта:</h4> {{ el.email }}</p>
+    {% else %}
+        <p><h4>Почта:</h4> Не заполнено</p>
     {% endif %}
+
+
+    {% if el.context %}
+        <p><h4>О себе:</h4> {{ el.context }}</p>
+    {% else %}
+        <p><h4>О себе:</h4> Не заполнено</p>
+    {% endif %}
+
 </div>
 {% endblock %}

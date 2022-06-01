@@ -5,7 +5,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import *
@@ -53,7 +53,6 @@ class HomeListView(DataMixin, ListView):
 #     }
 #     return render(request, 'people/index.html', context)
 
-
 # ----------------------------------------------------------------
 
 class UserDetailView(DataMixin, DetailView):
@@ -68,6 +67,24 @@ class UserDetailView(DataMixin, DetailView):
         c_def = self.get_user_context(title=user.username)
         context = dict(list(context.items()) + list(c_def.items()))
         return context
+
+# ----------------------------------------------------------------
+
+class UserUpdateView(DataMixin, UpdateView):
+    model = CustomUser
+    form_class = UpdateUserForm
+    template_name = 'people/registration.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        c_def = self.get_user_context(title='Edit user')
+        context = dict(list(context.items()) + list(c_def.items()))
+        return context
+
+    def get_success_url(self):
+        post = CustomUser.objects.get(slug=self.kwargs['slug'])
+        return post.get_absolute_url()
 
 # ----------------------------------------------------------------
 
@@ -125,7 +142,6 @@ class CommentDeleteView(DataMixin, DeleteView):
         post = Comment.objects.get(pk=self.kwargs['pk'])
         return post.people.get_absolute_url()
 
-
 # ----------------------------------------------------------------
 
 class CategoryListView(DataMixin, ListView):
@@ -162,6 +178,7 @@ class CategoryListView(DataMixin, ListView):
 #         'is_selected': cat.pk
 #     }
 #     return render(request, 'people/index.html', context)
+
 # ----------------------------------------------------------------
 
 class PeopleCreateView(LoginRequiredMixin, DataMixin, CreateView):
@@ -192,6 +209,7 @@ class PeopleCreateView(LoginRequiredMixin, DataMixin, CreateView):
 #         'title': 'Add article',
 #     }
 #     return render(request, 'people/add_article.html', context)
+
 # ----------------------------------------------------------------
 
 class RegisterUser(DataMixin, CreateView):
