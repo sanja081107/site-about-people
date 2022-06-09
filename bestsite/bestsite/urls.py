@@ -22,9 +22,16 @@ from people.views import pageNotFound
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('captcha/', include('captcha.urls')),
     path('', include('people.urls')),
 ]
 if settings.DEBUG:
+    import debug_toolbar
+
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns
+
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)    # подключаем ссылку на статические медиа файлы только в режиме отладки
 
 handler404 = pageNotFound                                                           # вызов функции обработчика страница не найдена

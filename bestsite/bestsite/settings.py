@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'people.apps.PeopleConfig'
+    'people.apps.PeopleConfig',
+    'captcha',
+    'debug_toolbar'
 ]
 
 AUTH_USER_MODEL = 'people.CustomUser'
@@ -50,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'bestsite.urls'
@@ -57,7 +60,7 @@ ROOT_URLCONF = 'bestsite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -129,3 +132,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')    # создаем директорию на статические медиа файлы
 MEDIA_URL = '/media/'                           # создаем ссылку на статические медиа файлы
+
+
+INTERNAL_IPS = ['127.0.0.1']                    # для работы debug toolbar

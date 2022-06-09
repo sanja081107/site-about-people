@@ -2,11 +2,13 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from captcha.fields import CaptchaField
 
 from .models import *
 from django.forms import ModelForm, TextInput, Textarea, FileInput, Select, CheckboxInput
 
 class PeopleForm(ModelForm):
+    captcha = CaptchaField(label='Введите текст с картинки ')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -48,7 +50,7 @@ class PeopleForm(ModelForm):
     # Функия должна начинаться с префикса clean_[имя поля которое хотим проверить]
     def clean_title(self):
         title = self.cleaned_data['title']
-        if len(title) > 10:
+        if len(title) > 20:
             raise ValidationError('Длина превышает 10 символов')
         return title
 
@@ -62,7 +64,7 @@ class RegisterUserForm(UserCreationForm):
     email = forms.CharField(label='Email (not required)', required=False, widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Input email'}))
     photo = forms.ImageField(label='Your photo (not required)', required=False, widget=forms.FileInput(attrs={'type': 'file', 'accept': 'image/*'}))
     birthday = forms.DateTimeField(label='Birthday (not required)', required=False, widget=forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}))
-    context = forms.CharField(label='About(not required)', required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'info', 'rows': '7'}))
+    context = forms.CharField(label='About(not required)', required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'About you', 'rows': '7'}))
 
     class Meta:
         model = CustomUser
@@ -87,7 +89,7 @@ class ChangeUserForm(UserChangeForm):
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'slug', 'photo', 'email', 'birthday', 'context')
+        fields = ('slug', 'photo', 'birthday', 'context')
 
 # ----------------------------------------------------------------
 

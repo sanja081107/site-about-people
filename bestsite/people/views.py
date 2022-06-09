@@ -42,7 +42,7 @@ class HomeListView(DataMixin, ListView):
         return context
 
     def get_queryset(self):
-        return People.objects.filter(is_published=True)
+        return People.objects.filter(is_published=True).select_related('cat')
 
 # def home(request):
 #     posts = People.objects.all()
@@ -108,7 +108,7 @@ class PeopleDetailView(DataMixin, DetailView, CreateView):
         post = People.objects.get(slug=self.kwargs['people_slug'])
         return post.get_absolute_url()
 
-    def form_valid(self, form):     # если форма коомента валидна то создается коммент где автор текущий пол-ль, а пипл выбранный пост
+    def form_valid(self, form):     # если форма коомента валидна то создается коммент где автор это текущий пол-ль, а пипл выбранный пост
         form.instance.author = self.request.user
         project = People.objects.get(slug=self.kwargs['people_slug'])
         form.instance.people = project
@@ -151,8 +151,8 @@ class CategoryListView(DataMixin, ListView):
 
     def get_queryset(self):
         # cat = Category.objects.get(slug=self.kwargs['cat_slug'])
-        # post = People.objects.filter(cat=cat, is_published=True)
-        post = People.objects.filter(cat__slug=self.kwargs['cat_slug'], is_published=True)  # эту строку можно заменить 2мя предыдущими
+        # post = People.objects.filter(cat=cat, is_published=True)                 # select_related('cat') создает жадный запрос для модели People по ключу cat
+        post = People.objects.filter(cat__slug=self.kwargs['cat_slug'], is_published=True).select_related('cat')    # эту строку можно заменить 2мя предыдущими
         if len(post) == 0:
             raise Http404()
         return post
@@ -189,7 +189,7 @@ class PeopleCreateView(LoginRequiredMixin, DataMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title='Add article')
+        c_def = self.get_user_context(title='Добавить статью')
         return dict(list(context.items()) + list(c_def.items()))
 
 # def add_article(request):

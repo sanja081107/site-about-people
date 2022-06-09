@@ -72,7 +72,7 @@ class Category(models.Model):
 class Comment(models.Model):
     author = models.ForeignKey('CustomUser', on_delete=models.CASCADE, verbose_name='Имя автора')
     people = models.ForeignKey('People', on_delete=models.CASCADE, verbose_name='Имя поста')
-    context = models.TextField(verbose_name='Содержание')
+    context = models.TextField(max_length=100, verbose_name='Содержание')
 
     def __str__(self):
         return f'{self.author}'
