@@ -38,6 +38,8 @@ class CustomUserAdmin(UserAdmin):
         if object.photo:
             return mark_safe(f"<img src='{ object.photo.url }' width=50>")
 
+    get_html_photo.short_description = 'Миниатюра'
+
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('id', 'author', 'people', 'context')
     list_display_links = ('id', 'author')
