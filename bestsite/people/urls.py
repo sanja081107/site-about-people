@@ -14,6 +14,6 @@ urlpatterns = [
     path('user_edit/<slug:slug>', UserUpdateView.as_view(), name='user_edit'),
     path('people/<slug:people_slug>/', PeopleDetailView.as_view(), name='people_detail'),
     path('delete_comment/<int:pk>', CommentDeleteView.as_view(), name='delete_comment'),
-    path('category/<slug:cat_slug>/', cache_page(60)(CategoryListView.as_view()), name='category')
+    path('category/<slug:cat_slug>/', cache_page(30)(CategoryListView.as_view()), name='category')
 
 ]
