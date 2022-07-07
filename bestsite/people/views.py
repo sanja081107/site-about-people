@@ -2,10 +2,11 @@ from django.contrib.auth import logout, login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView
 from django.core.paginator import Paginator
+from django.db.models import Count
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse, HttpResponseNotFound, Http404
+from django.http import HttpResponse, HttpResponseNotFound, Http404, JsonResponse
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import *
@@ -20,8 +21,26 @@ def about(request):
     menu_about = menu.copy()
     if not request.user.is_authenticated:
         menu_about.pop(1)
-    context = {'title': 'Страница о нас', 'menu': menu_about}
+        menu_about.pop(1)
+        context = {'title': 'Страница обо мне', 'menu': menu_about}
+    else:
+        favorites = FavoritesPeople.objects.filter(author=request.user)
+        context = {'title': 'Страница обо мне', 'menu': menu_about, 'favorites_len': len(favorites)}
     return render(request, 'people/about.html', context)
+
+def favorite(request, pk):
+    post = People.objects.get(pk=pk)
+    favorite = FavoritesPeople()
+    favorite.people = post
+    favorite.author = request.user
+    favorite.save()
+    return redirect(post.get_absolute_url())
+
+def not_favorite(request, pk):
+    post = People.objects.get(pk=pk)
+    fav = FavoritesPeople.objects.filter(people=post, author=request.user)
+    fav.delete()
+    return redirect(post.get_absolute_url())
 
 def logout_user(request):
     logout(request)     # стандартная ф-ия джанго для выхода пользователя
@@ -100,22 +119,30 @@ class PeopleDetailView(DataMixin, DetailView, CreateView):
         post = People.objects.get(slug=self.kwargs['people_slug'])
         comments = Comment.objects.filter(people=post)
 
-        c_def = self.get_user_context(title=context['el'], is_selected=post.cat.pk, comments=comments)
+        c_def = self.get_user_context(title=post.title, is_selected=post.cat.pk, comments=comments)
+        context['favorite_form'] = FavoritesPeopleForm
+
+        fav = FavoritesPeople.objects.filter(author=self.request.user)
+        c = []
+        for i in fav:
+            c.append(i.people)
+        context['favorites'] = c
+
         context = dict(list(context.items()) + list(c_def.items()))
         return context
+
+    def form_valid(self, form):     # если форма комента валидна то создается коммент где автор это текущий пол-ль, а пипл выбранный пост
+        project = People.objects.get(slug=self.kwargs['people_slug'])
+        form.instance.author = self.request.user
+        form.instance.people = project
+        return super().form_valid(form)
 
     def get_success_url(self):      # если форма создана идет переадресация
         post = People.objects.get(slug=self.kwargs['people_slug'])
         return post.get_absolute_url()
 
-    def form_valid(self, form):     # если форма коомента валидна то создается коммент где автор это текущий пол-ль, а пипл выбранный пост
-        form.instance.author = self.request.user
-        project = People.objects.get(slug=self.kwargs['people_slug'])
-        form.instance.people = project
-        return super().form_valid(form)
-
 # def people_detail(request, people_slug):
-#     post = get_object_or_404(People, slug=people_s    lug)
+#     post = get_object_or_404(People, slug=people_slug)
 #     cat = post.cat.pk
 #     context = {
 #         'el': post,
@@ -123,6 +150,37 @@ class PeopleDetailView(DataMixin, DetailView, CreateView):
 #         'is_selected': cat
 #     }
 #     return render(request, 'people/p_detail.html', context)
+
+# ----------------------------------------------------------------
+
+class FavoritesListView(DataMixin, ListView):
+    template_name = 'people/favorites.html'
+    context_object_name = 'posts'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        c_def = self.get_user_context(title='Избранные люди')
+        context = dict(list(context.items()) + list(c_def.items()))
+        return context
+
+    def get_queryset(self):
+        return FavoritesPeople.objects.filter(author=self.request.user)
+
+# ----------------------------------------------------------------
+
+class PeopleDeleteView(DataMixin, DeleteView):
+    model = People
+    template_name = 'people/delete_blog.html'
+    context_object_name = 'el'
+    success_url = reverse_lazy('main')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        c_def = self.get_user_context(title=context['el'])
+        context = dict(list(context.items()) + list(c_def.items()))
+        return context
 
 # ----------------------------------------------------------------
 
@@ -191,6 +249,10 @@ class PeopleCreateView(LoginRequiredMixin, DataMixin, CreateView):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title='Добавить статью')
         return dict(list(context.items()) + list(c_def.items()))
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
 # def add_article(request):
 #     if request.method == 'POST':

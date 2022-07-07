@@ -4,12 +4,12 @@
 }
 .people {
     border-bottom: 2px solid;
-    padding-bottom: 20px;
+    padding-bottom: 60px;
 }
 
 aside {
     background-color: #DBE4D1;
-    padding-top: 5%;
+    padding-top: 80px;
     padding-left: 2%;
     height: 100%;
     position: fixed;
@@ -58,18 +58,17 @@ body a {text-decoration: none;}
 
 header {
     position: fixed;
-    height: 7.5%;
+    height: 50px;
     background-color: #7E90A8;
     width: 100%;
 }
 
 main {
-    padding-top: 5%;
+    padding-top: 80px;
     width: 80%;
     margin-left: 20%;
     font-size: 20px;
     text-align: center;
-    float: top;
 }
 .content {
     padding-left: 20px;
@@ -77,6 +76,7 @@ main {
 #photo {
     margin-right: 20px;
     margin-bottom: 20px;
+    margin-left: 20px;
 }
 
 .fs-4 {
@@ -90,4 +90,16 @@ main {
     left: 10px;
     width: 20px;
     border-radius: 10px;
+}
+.about-me {
+    text-align: justify;
+    width: 50%;
+    margin-left: 25%;
+}
+.about-list {
+    list-style: auto;
+}
+.people-context{
+    text-align: justify;
+    padding-right: 20px;
 }

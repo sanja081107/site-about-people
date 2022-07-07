@@ -1,0 +1,29 @@
+{% extends 'people/base.html' %}
+
+{% block title %}
+    {{title}}
+{% endblock %}
+
+
+{% block main %}
+    <h1>{{title}}</h1><br>
+    {% for el in posts %}
+        <div class="people">
+            <div class="article">
+                <span>Категория: </span><a href="{{ el.cat.get_absolute_url }}">{{ el.people.cat.name }}</a>
+                <span> | Дата создания: </span>{{ el.people.time_create|date:'d-m-Y H:i:s' }}
+                <span> | Изменено: </span>{{ el.people.time_update|date:'d-m-Y H:i:s' }}
+            </div>
+            <br>
+            <p>{{ el.people.title }}</p>
+            {% if el.people.photo %}
+                <img id="photo" src="{{ el.people.photo.url }}" width="10%" align="left">
+            {% endif %}
+            <div class="people-context">
+                <p>{{ el.people.content|linebreaks|truncatewords:40 }}</p>
+            </div>
+            <a class="btn btn-warning" href="{{ el.people.get_absolute_url }}">More info</a>
+        </div>
+    {% endfor %}
+
+{% endblock %}

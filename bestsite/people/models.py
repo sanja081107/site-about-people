@@ -34,6 +34,7 @@ class People(models.Model):
     time_update = models.DateTimeField(auto_now=True)
     is_published = models.BooleanField(default=True, verbose_name='Опубликовать')
     cat = models.ForeignKey('Category', on_delete=models.PROTECT, verbose_name='Категория')
+    author = models.ForeignKey('CustomUser', on_delete=models.PROTECT, verbose_name='Автор')
 
     def __str__(self):
         return self.title
@@ -80,6 +81,20 @@ class Comment(models.Model):
     class Meta:
         verbose_name = 'Comment'
         verbose_name_plural = 'Comments'
+        ordering = ['pk']
+
+# ------------------------------------------------------------------------------------------
+
+class FavoritesPeople(models.Model):
+    author = models.ForeignKey('CustomUser', on_delete=models.CASCADE, verbose_name='Имя автора')
+    people = models.ForeignKey('People', on_delete=models.CASCADE, verbose_name='Имя поста')
+
+    def __str__(self):
+        return f'{self.people}'
+
+    class Meta:
+        verbose_name = 'Favorite'
+        verbose_name_plural = 'Favorites'
         ordering = ['pk']
 
 # ------------------------------------------------------------------------------------------

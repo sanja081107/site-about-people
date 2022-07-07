@@ -14,11 +14,14 @@
                 <span> | Дата создания: </span>{{ el.time_create|date:'d-m-Y H:i:s' }}
                 <span> | Изменено: </span>{{ el.time_update|date:'d-m-Y H:i:s' }}
             </div>
+            <br>
             <p>{{ el.title }}</p>
             {% if el.photo %}
-                <img src="{{ el.photo.url }}" width="20%"><br>
+                <img id="photo" src="{{ el.photo.url }}" width="10%" align="left">
             {% endif %}
-            <p>{{ el.content|linebreaks|truncatewords:25 }}</p>
+            <div class="people-context">
+                <p>{{ el.content|linebreaks|truncatewords:40 }}</p>
+            </div>
             <a class="btn btn-warning" href="{{ el.get_absolute_url }}">More info</a>
         </div>
     {% endfor %}

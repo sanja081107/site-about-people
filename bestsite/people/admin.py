@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from .forms import *
-from people.models import People, Category, CustomUser, Comment
+from people.models import People, Category, CustomUser, Comment, FavoritesPeople
 
 class PeopleAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'cat', 'time_create', 'get_html_photo', 'is_published')
@@ -11,7 +11,7 @@ class PeopleAdmin(admin.ModelAdmin):
     list_editable = ('is_published',)
     list_filter = ('is_published', 'time_create', 'cat')
     prepopulated_fields = {'slug': ('title',)}  # делаем автозаполнение для поля slug полем title в админ панели
-    fields = ('title', 'slug', 'content', 'cat', 'time_create', 'time_update', 'get_html_photo', 'photo', 'is_published')
+    fields = ('title', 'slug', 'content', 'cat', 'time_create', 'time_update', 'get_html_photo', 'photo', 'is_published', 'author')
     readonly_fields = ('time_create', 'time_update', 'get_html_photo')
 
     def get_html_photo(self, object):
@@ -48,6 +48,7 @@ admin.site.register(People, PeopleAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Comment, CommentAdmin)
+admin.site.register(FavoritesPeople)
 
 admin.site.site_title = 'Site about people'
 admin.site.site_header = 'Site about people'

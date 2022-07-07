@@ -20,6 +20,9 @@ from django.urls import path, include
 from bestsite import settings
 from people.views import pageNotFound
 
+from django.views.static import serve as mediaserve
+from django.urls import re_path
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('captcha/', include('captcha.urls')),
@@ -33,5 +36,12 @@ if settings.DEBUG:
     ] + urlpatterns
 
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)    # подключаем ссылку на статические медиа файлы только в режиме отладки
+else:
+    urlpatterns += [
+        re_path(f'^{settings.MEDIA_URL.lstrip("/")}(?P<path>.*)$',
+            mediaserve, {'document_root': settings.MEDIA_ROOT}),
+        re_path(f'^{settings.STATIC_URL.lstrip("/")}(?P<path>.*)$',
+            mediaserve, {'document_root': settings.STATIC_ROOT}),
+    ]
 
 handler404 = pageNotFound                                                           # вызов функции обработчика страница не найдена

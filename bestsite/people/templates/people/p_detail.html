@@ -6,17 +6,44 @@
 
 
 {% block main %}
-<h1>People detail page</h1><br>
-<h3>Имя: {{ el.title }}</h3>
+<h1>{{ el.title }}</h1><br>
+
+{% if request.user == el.author %}
+    <a href="{% url 'delete_people' el.pk %}" class="btn btn-danger">Delete</a>
+{% endif %}
+
+<!--<p>{{ favorites_len }}</p>-->
+<!--<p>{{ favorites }}</p>-->
+
+{% if request.user.is_authenticated %}
+    {% if el not in favorites %}
+        <form method="post" action="{% url 'favorite' el.pk %}">
+            {% csrf_token %}
+            {{ favorite_form }}
+            <br><button class="btn btn-success" type="submit">My favorite</button>
+        </form>
+    {% else %}
+        <form method="post" action="{% url 'not_favorite' el.pk %}">
+            {% csrf_token %}
+            {{ favorite_form }}
+            <br><button class="btn btn-danger" type="submit">Not favorite</button>
+        </form>
+    {% endif %}
+{% endif %}
+
+
 <div class="content">
 
     {% if el.photo %}
-        <img id="photo" src="{{ el.photo.url }}" width="25%" align="left">
+        <br><img id="photo" src="{{ el.photo.url }}" width="30%" align="left">
     {% endif %}
 
 
     {% if el.content %}
-        <p><h4>Контент:</h4> {{ el.content|linebreaks }}</p>
+        <h4>Кратко о {{ title }}:</h4>
+        <div class="people-context">
+            <p>{{ el.content|linebreaks }}</p>
+        </div>
     {% else %}
         <p>Нет информации о контенте</p>
     {% endif %}

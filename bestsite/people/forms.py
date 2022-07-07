@@ -13,11 +13,10 @@ class PeopleForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['cat'].empty_label = 'Категория не выбрана'
-        self.fields['content'].label = 'Контент'
 
     class Meta:
         model = People
-        fields = '__all__'
+        fields = ('title', 'slug', 'content', 'photo', 'cat', 'is_published')
 
         widgets = {
             'title': TextInput(attrs={
@@ -57,31 +56,35 @@ class PeopleForm(ModelForm):
 # ----------------------------------------------------------------
 
 class RegisterUserForm(UserCreationForm):
-    username = forms.CharField(label='Username', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Input login'}))
+    username = forms.CharField(label='Login', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Input login'}))
+    first_name = forms.CharField(label='First name (not required)', required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Input first name'}))
+    last_name = forms.CharField(label='Last name (not required)', required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Input last name'}))
     slug = forms.SlugField(label='Url', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Input URL'}))
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Input password'}))
     password2 = forms.CharField(label='Password again', widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Input password again'}))
     email = forms.CharField(label='Email (not required)', required=False, widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Input email'}))
     photo = forms.ImageField(label='Your photo (not required)', required=False, widget=forms.FileInput(attrs={'type': 'file', 'accept': 'image/*'}))
     birthday = forms.DateTimeField(label='Birthday (not required)', required=False, widget=forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}))
-    context = forms.CharField(label='About(not required)', required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'About you', 'rows': '7'}))
+    context = forms.CharField(label='About (not required)', required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'About you', 'rows': '7'}))
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'slug', 'photo', 'email', 'birthday', 'context', 'password1', 'password2')
+        fields = ('username', 'slug', 'first_name', 'last_name', 'photo', 'email', 'birthday', 'context', 'password1', 'password2')
         # widgets = {'slug': forms.HiddenInput()}
 
 class UpdateUserForm(ModelForm):
-    username = forms.CharField(label='Username', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Input login'}))
+    username = forms.CharField(label='Login', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Input login'}))
+    first_name = forms.CharField(label='First name (not required)', required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Input first name'}))
+    last_name = forms.CharField(label='Last name (not required)', required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Input last name'}))
     slug = forms.SlugField(label='Url', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Input URL'}))
     email = forms.CharField(label='Email (not required)', required=False, widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Input email'}))
     photo = forms.ImageField(label='Your photo (not required)', required=False, widget=forms.FileInput(attrs={'type': 'file', 'accept': 'image/*'}))
     birthday = forms.DateTimeField(label='Birthday (not required)', required=False, widget=forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}))
-    context = forms.CharField(label='About(not required)', required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'info', 'rows': '7'}))
+    context = forms.CharField(label='About (not required)', required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'info', 'rows': '7'}))
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'slug', 'photo', 'email', 'birthday', 'context')
+        fields = ('username', 'slug', 'first_name', 'last_name', 'photo', 'email', 'birthday', 'context')
 
 # ----------------------------------------------------------------
 
@@ -110,5 +113,15 @@ class CommentForm(ModelForm):
         widgets = {
             'context': Textarea(attrs={'class': 'form-control', 'placeholder': 'Input text', 'rows': '5'})
         }
+
+# ----------------------------------------------------------------
+
+class FavoritesPeopleForm(ModelForm):
+
+    class Meta:
+        model = FavoritesPeople
+        fields = '__all__'
+        widgets = {'author': forms.HiddenInput(),
+                   'people': forms.HiddenInput()}
 
 # ----------------------------------------------------------------

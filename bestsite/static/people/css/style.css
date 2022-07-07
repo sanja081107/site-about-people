@@ -1,0 +1,101 @@
+.home {
+    height: 100%;
+    background-color: white;
+}
+.people {
+    border-bottom: 2px solid;
+    padding-bottom: 20px;
+}
+
+aside {
+    background-color: #DBE4D1;
+    padding-top: 80px;
+    padding-left: 2%;
+    height: 100%;
+    position: fixed;
+    width: 20%;
+    border-right: 2px solid black;
+}
+.article {
+    font-size: 20px;
+    background-color: #B59E93;
+}
+.add-post {
+    width: 50%;
+    margin-left: 25%;
+}
+.comment-people{
+    align: center;
+    padding: 5px;
+    width: 50%;
+    margin-top: 10px;
+    margin-left: 25%;
+    border-radius: 10px;
+    border: 2px solid blue;
+}
+.form-error {
+    margin-left: 20%;
+    color: red;
+}
+.list_page {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+.form-check {
+    position: relative;
+    left: 65%;
+    top: -25px;
+}
+body aside ul {
+    list-style: none;
+    position: relative;
+    right: 13%;
+}
+ul {
+    list-style: none;
+}
+body a {text-decoration: none;}
+
+header {
+    position: fixed;
+    height: 50px;
+    background-color: #7E90A8;
+    width: 100%;
+}
+
+main {
+    padding-top: 80px;
+    width: 80%;
+    margin-left: 20%;
+    font-size: 20px;
+    text-align: center;
+    float: top;
+}
+.content {
+    padding-left: 20px;
+}
+#photo {
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+
+.fs-4 {
+    margin-left: 10px;
+}
+.color-username {
+    color: green;
+}
+#user_photo {
+    position: relative;
+    left: 10px;
+    width: 20px;
+    border-radius: 10px;
+}
+.about-me {
+    text-align: justify;
+    width: 50%;
+    margin-left: 25%;
+}
+.about-list {
+    list-style: auto;
+}

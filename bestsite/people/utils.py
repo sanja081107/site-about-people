@@ -1,8 +1,9 @@
 from .models import *
 
-menu = [{'title': 'Main', 'url_name': 'main'},
-        {'title': 'Add article', 'url_name': 'add_article'},
-        {'title': 'About', 'url_name': 'about'}]
+menu = [{'title': 'Главная', 'url_name': 'main'},
+        {'title': 'Добавить статью', 'url_name': 'add_article'},
+        {'title': 'Избранное', 'url_name': 'my_favorites'},
+        {'title': 'Обо мне', 'url_name': 'about'}]
 
 class DataMixin:
     paginate_by = 2
@@ -13,6 +14,11 @@ class DataMixin:
 
         if not self.request.user.is_authenticated:
             user_menu.pop(1)
+            user_menu.pop(1)
+        else:
+            favorites = FavoritesPeople.objects.filter(author=self.request.user)
+            context['favorites_len'] = len(favorites)
+
         context['menu'] = user_menu
 
         if 'is_selected' not in context:
