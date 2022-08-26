@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'people.apps.PeopleConfig',
     'captcha',
-    'debug_toolbar'
+    'debug_toolbar',
+    'chat.apps.ChatConfig',
 ]
 
 AUTH_USER_MODEL = 'people.CustomUser'

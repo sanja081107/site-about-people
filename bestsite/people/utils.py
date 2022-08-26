@@ -3,7 +3,9 @@ from .models import *
 menu = [{'title': 'Главная', 'url_name': 'main'},
         {'title': 'Добавить статью', 'url_name': 'add_article'},
         {'title': 'Избранное', 'url_name': 'my_favorites'},
-        {'title': 'Обо мне', 'url_name': 'about'}]
+        {'title': 'Обо мне', 'url_name': 'about'},
+        {'title': 'Форум', 'url_name': 'forum'},
+        ]
 
 class DataMixin:
     paginate_by = 2

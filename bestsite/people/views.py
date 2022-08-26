@@ -122,11 +122,12 @@ class PeopleDetailView(DataMixin, DetailView, CreateView):
         c_def = self.get_user_context(title=post.title, is_selected=post.cat.pk, comments=comments)
         context['favorite_form'] = FavoritesPeopleForm
 
-        fav = FavoritesPeople.objects.filter(author=self.request.user)
-        c = []
-        for i in fav:
-            c.append(i.people)
-        context['favorites'] = c
+        if self.request.user.is_authenticated:
+            fav = FavoritesPeople.objects.filter(author=self.request.user)
+            c = []
+            for i in fav:
+                c.append(i.people)
+            context['favorites'] = c
 
         context = dict(list(context.items()) + list(c_def.items()))
         return context

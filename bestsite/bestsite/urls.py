@@ -27,6 +27,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('captcha/', include('captcha.urls')),
     path('', include('people.urls')),
+    path('', include('chat.urls')),
+
 ]
 if settings.DEBUG:
     import debug_toolbar
