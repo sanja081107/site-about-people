@@ -109,6 +109,9 @@ body {
             <div class="container">
                 <p>Name rubric: {{ el.name }}</p>
                 <a class="btn btn-success" href="{% url 'input_name' el.pk %}">Join in chat</a>
+                {% if request.user.username == 'admin' %}
+                    <a class="btn btn-danger" href="{% url 'delete_chat' el.pk %}">Delete chat</a>
+                {% endif %}
             </div>
         {% endfor %}
     {% endif %}

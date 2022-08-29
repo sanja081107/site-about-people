@@ -10,6 +10,11 @@ def home(request):
     }
     return render(request, 'chat/home.html', context)
 
+def delete_chat(request, pk):
+    room = Room.objects.get(pk=pk)
+    room.delete()
+    return redirect('forum')
+
 def input_name(request, pk):
     chat = Room.objects.get(pk=pk)
     context = {
@@ -20,20 +25,20 @@ def input_name(request, pk):
 def checkview(request):
     room_name = request.POST['room_name']
     username = request.POST['username']
-
-    if Room.objects.filter(name=room_name).exists():
-        return redirect('/'+room_name+'/?username='+username)
+    room = Room.objects.filter(name=room_name)
+    if room.exists():
+        return redirect(str(room[0].id)+'-chat/?username='+username)
     else:
         new_room = Room.objects.create(name=room_name)
         new_room.save()
-        return redirect('/'+room_name+'/?username='+username)
+        return redirect(str(new_room.id)+'-chat/?username='+username)
 
-def room(request, room):
+def room(request, pk):
     username = request.GET.get('username')
-    room_details = Room.objects.get(name=room)
+    room_details = Room.objects.get(pk=pk)
     return render(request, 'chat/room.html', {
         'username': username,
-        'room': room,
+        'room': str(room_details.id),
         'room_details': room_details
     })
 
@@ -46,8 +51,8 @@ def send(request):
     new_message.save()
     return HttpResponse('Message sent successfully')
 
-def getMessages(request, room):
-    room_details = Room.objects.get(name=room)
+def getMessages(request, pk):
+    room_details = Room.objects.get(pk=pk)
 
     messages = Message.objects.filter(room=room_details.id)
     return JsonResponse({"messages": list(messages.values())})
